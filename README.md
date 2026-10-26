@@ -4,7 +4,7 @@ A small Windows GUI for turning an Android App Bundle (`.aab`) into a universal 
 
 ## Download
 
-Run [`BundleToolGUI_AutoOpenFix.exe`](BundleToolGUI_AutoOpenFix.exe).
+Run [`BundleToolGUI.exe`](BundleToolGUI.exe).
 
 The C# rewrite is available at [`BundleToolGUIReplacement.cs`](BundleToolGUIReplacement.cs).
 
@@ -32,5 +32,6 @@ An internet connection is needed for the initial downloads. For installation, co
 ## About this rewrite
 
 AI was used to inspect the original Python-based app and rewrite its recovered behavior in C#. The original executable contained compiled Python bytecode rather than the original source, so this is a reconstruction of the app's workflow, not a line-for-line source translation.
+
 
 
