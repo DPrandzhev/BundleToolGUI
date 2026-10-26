@@ -152,7 +152,7 @@ namespace BundleToolGUIReplacement
                 if (dialog.ShowDialog(this) == DialogResult.OK)
                 {
                     aabBox.Text = dialog.FileName;
-                    outputBox.Text = Path.Combine(Path.GetDirectoryName(dialog.FileName), "BundleToolGUI_Output");
+                    outputBox.Text = Path.GetDirectoryName(dialog.FileName);
                 }
             }
         }
@@ -237,7 +237,7 @@ namespace BundleToolGUIReplacement
                 return;
             }
             if (output.Length == 0)
-                output = Path.Combine(Path.GetDirectoryName(aab), "BundleToolGUI_Output");
+                output = Path.GetDirectoryName(aab);
             if (customRadio.Checked && (!File.Exists(keyBox.Text.Trim()) || passwordBox.Text.Length == 0 || aliasBox.Text.Trim().Length == 0))
             {
                 MessageBox.Show(this, "For a custom keystore, choose the file and enter its password and alias.", "Keystore", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -335,6 +335,7 @@ namespace BundleToolGUIReplacement
                 Log("Installation completed.");
             }
             Log("Task completed.");
+            OpenOutputDirectory(outputDir);
         }
 
         private string EnsureJavaAndGetKeytool()
@@ -491,10 +492,33 @@ namespace BundleToolGUIReplacement
             if (path.Length == 0)
             {
                 string aab = aabBox.Text.Trim();
-                path = File.Exists(aab) ? Path.Combine(Path.GetDirectoryName(aab), "BundleToolGUI_Output") : appData;
+                path = File.Exists(aab) ? Path.GetDirectoryName(aab) : appData;
             }
             Directory.CreateDirectory(path);
             Process.Start(new ProcessStartInfo { FileName = "explorer.exe", Arguments = QuoteArgument(path), UseShellExecute = true });
+        }
+
+        private void OpenOutputDirectory(string path)
+        {
+            if (!Directory.Exists(path))
+            {
+                Log("Output folder is missing: " + path);
+                return;
+            }
+            if (InvokeRequired)
+            {
+                BeginInvoke((MethodInvoker)delegate { OpenOutputDirectory(path); });
+                return;
+            }
+            try
+            {
+                Log("Opening output folder...");
+                Process.Start(new ProcessStartInfo { FileName = "explorer.exe", Arguments = "/n," + QuoteArgument(path), UseShellExecute = false, CreateNoWindow = true });
+            }
+            catch (Exception ex)
+            {
+                Log("Could not open the output folder automatically: " + ex.Message);
+            }
         }
 
         private void SetBusy(bool busy)
