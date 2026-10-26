@@ -1,12 +1,35 @@
 # BundleToolGUI
 
+A small Windows GUI for turning an Android App Bundle (`.aab`) into a universal APK, with an option to install it on a connected Android device.
 
-This is a Python-free Windows replacement for the recovered AAB-to-APK GUI.
+## Download
 
-- `BundleToolGUI_Final.exe` is the updated app. It does not need `python39.dll` and explicitly enables TLS 1.2 for downloads.
-- The first build downloads Temurin Java 17 and Google Bundletool 1.18.3 from their official sources into `%LOCALAPPDATA%\BundleToolGUI`.
-- `Build and Install` also downloads Android platform-tools (ADB). USB debugging must be enabled and the phone must authorize this computer.
-- Choose a debug keystore or provide a custom keystore. The output files use the input AAB's basename: `<name>.apk` and `<name>.apks`.
-- `BundleToolGUIReplacement.cs` is the C# source.
+Run [`BundleToolGUI_Final.exe`](outputs/BundleToolGUI_Final.exe).
 
-The executable targets Windows and uses the .NET Framework components included with current Windows 10/11. It compiled successfully, but I have not run an end-to-end conversion.
+The C# rewrite is available at [`BundleToolGUIReplacement.cs`](outputs/BundleToolGUIReplacement.cs).
+
+## How to use it
+
+1. Open the app and choose an `.aab` file.
+2. Choose a signing key:
+   - **Debug keystore** creates and uses a local debug key.
+   - **Custom keystore** lets you select your own keystore, enter its password, and provide or fetch the alias.
+3. Choose **Build APK** to create the files, or **Build and Install** to build and install the APK on a connected device.
+4. Find the output beside the selected AAB, in `BundleToolGUI_Output`, unless you choose another folder.
+
+The output names match the AAB's base name. For example, `MyApp.aab` produces `MyApp.apk` and `MyApp.apks`.
+
+## First run and requirements
+
+The app does not need `python39.dll`. On first use it downloads and caches:
+
+- Temurin Java 17
+- Google Bundletool 1.18.3
+- Android platform-tools (ADB), when you choose **Build and Install**
+
+An internet connection is needed for the initial downloads. For installation, connect an Android device, enable USB debugging, and authorize the computer when prompted. The app targets Windows 10/11 and uses the .NET Framework components available on Windows.
+
+## About this rewrite
+
+AI was used to inspect the original Python-based app and rewrite its recovered behavior in C#. The original executable contained compiled Python bytecode rather than the original source, so this is a reconstruction of the app's workflow, not a line-for-line source translation.
+
